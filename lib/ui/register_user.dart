@@ -83,16 +83,17 @@ class _RegisterAuthState extends State<RegisterAuth> {
             ),
             ElevatedButton(
               child: Text("Register"),
-              onPressed: () {
+              onPressed: () async {
                 // print("User: name ${nameController.text} document ${documentController.text} ");
                 UserEntity user =
                     UserEntity(name: nameController.text, document: documentController.text, id: 0, telefones: []);
                 List<TelefoneEntity> phones = [];
                 fields.forEach((field) {
-                  phones.add(TelefoneEntity(number: field.getData(), id: user.id));
+                  phones.add(TelefoneEntity(number: field.getData(), id: user.id, userId: user.id));
                   print("Phone: ${field.getData()}");
                 });
-                widget.usersController.registerUser(user, phones);
+                await widget.usersController.registerUser(user, phones);
+                await widget.usersController.getUsers();
               },
             )
           ],

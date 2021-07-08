@@ -21,8 +21,20 @@ abstract class UsersControllerBase with Store {
   }
 
   @action
-  registerUser(UserEntity user, List<TelefoneEntity> phones) {
-    userRepo.insertUserAndPhones(user, phones);
+  registerUser(UserEntity user, List<TelefoneEntity> phones) async {
+    await userRepo.insertUserAndPhones(user, phones);
     // userRepo.insertUser(user);
+  }
+
+  @action
+  updateUser(UserEntity user) async {
+    await userRepo.updateUserByIndex(user: user);
+    users = await userRepo.getUsers();
+  }
+
+  @action
+  deleteUserAndPhone(int index) async {
+    await userRepo.deleteUserByIndex(index);
+    users = await userRepo.getUsers();
   }
 }

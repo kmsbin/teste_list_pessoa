@@ -20,36 +20,40 @@ class UsersRepository {
     // ]);
   }
 
-  void deleteUserByIndex(int index) async {
-    dbConn.deleteUser(index);
+  Future<void> deleteUserByIndex(int index) async {
+    await dbConn.deletePhone(index);
+    await dbConn.deleteUser(index);
   }
 
   void insertUser(UserEntity user) {
     dbConn.insertUser(user.toMap());
   }
 
-  void insertUserAndPhones(UserEntity newUser, List<TelefoneEntity> phones) async {
+  Future<void> insertUserAndPhones(UserEntity newUser, List<TelefoneEntity> phones) async {
     int? userId = await dbConn.insertUser(newUser.toMap());
     print("Insert phone $phones in $userId ");
-    phones.forEach((phone) async {
-      await dbConn.insertPhone(phone.toMap(), userId!);
+    phones.asMap().forEach((index, phone) async {
+      int index = (await dbConn.insertPhone(phone.toMap(), userId!))!;
+      phones[index].id = index;
     });
   }
 
-  void updateUserByIndex({required UserEntity user}) {
-    dbConn.updateUser(user.toMap(), user.id);
+  Future<void> updateUserByIndex({
+    required UserEntity user,
+  }) async {
+    await dbConn.updateUser(user.toMap(), user.id);
+    for (TelefoneEntity phone in user.telefones) {
+      await dbConn.updatePhone(phone.toMap(), phone.id);
+    }
   }
 
   Future<List<UserEntity>> getUsers() async {
     List<Map<String, dynamic>> listUsers = await dbConn.queryAllUsers();
     List<UserEntity> users = [];
-    listUsers.forEach((newUser) async {
+    for (var newUser in listUsers) {
       List<Map<String, dynamic>> listPhones = await dbConn.queryAllUserPhones(newUser[DatabaseHelper.userId]);
       users.add(UserEntity.fromMap(newUser, rawPhones: listPhones));
-    });
-    users.forEach((element) {
-      print("Telefones ${element.telefones}");
-    });
+    }
     return users;
   }
 

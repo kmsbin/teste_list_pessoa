@@ -31,18 +31,29 @@ mixin _$UsersController on UsersControllerBase, Store {
     return _$getUsersAsyncAction.run(() => super.getUsers());
   }
 
-  final _$UsersControllerBaseActionController =
-      ActionController(name: 'UsersControllerBase');
+  final _$registerUserAsyncAction =
+      AsyncAction('UsersControllerBase.registerUser');
 
   @override
-  dynamic registerUser(UserEntity user, List<TelefoneEntity> phones) {
-    final _$actionInfo = _$UsersControllerBaseActionController.startAction(
-        name: 'UsersControllerBase.registerUser');
-    try {
-      return super.registerUser(user, phones);
-    } finally {
-      _$UsersControllerBaseActionController.endAction(_$actionInfo);
-    }
+  Future registerUser(UserEntity user, List<TelefoneEntity> phones) {
+    return _$registerUserAsyncAction
+        .run(() => super.registerUser(user, phones));
+  }
+
+  final _$updateUserAsyncAction = AsyncAction('UsersControllerBase.updateUser');
+
+  @override
+  Future updateUser(UserEntity user) {
+    return _$updateUserAsyncAction.run(() => super.updateUser(user));
+  }
+
+  final _$deleteUserAndPhoneAsyncAction =
+      AsyncAction('UsersControllerBase.deleteUserAndPhone');
+
+  @override
+  Future deleteUserAndPhone(int index) {
+    return _$deleteUserAndPhoneAsyncAction
+        .run(() => super.deleteUserAndPhone(index));
   }
 
   @override

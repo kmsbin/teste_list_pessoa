@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static final _databaseName = "list_pessoas.db";
+  static final _databaseName = "teste_list_pessoas.db";
   static final _databaseVersion = 1;
 
   static final tableUser = 'user';
