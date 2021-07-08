@@ -31,6 +31,20 @@ mixin _$UsersController on UsersControllerBase, Store {
     return _$getUsersAsyncAction.run(() => super.getUsers());
   }
 
+  final _$UsersControllerBaseActionController =
+      ActionController(name: 'UsersControllerBase');
+
+  @override
+  dynamic registerUser(UserEntity user, List<TelefoneEntity> phones) {
+    final _$actionInfo = _$UsersControllerBaseActionController.startAction(
+        name: 'UsersControllerBase.registerUser');
+    try {
+      return super.registerUser(user, phones);
+    } finally {
+      _$UsersControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

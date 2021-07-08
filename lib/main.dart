@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:list_pessoas/controllers/users_controller.dart';
+import 'package:list_pessoas/ui/list_users.dart';
 import 'package:list_pessoas/ui/register_user.dart';
 
 void main() {
@@ -13,42 +14,31 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'list pessoas',
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.blue,
+        inputDecorationTheme: InputDecorationTheme(
+          labelStyle: TextStyle(color: Colors.white54),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white54, width: 1.0),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white54, width: 1.0),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white54, width: 1.0),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white54, width: 1.0),
+          ),
+        ),
+        textTheme: TextTheme(
+          headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
+          headline6: TextStyle(fontSize: 24.0, fontStyle: FontStyle.normal, fontFamily: 'Roboto'),
+          bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
+        ),
+      ),
       home: ListPage(),
-    );
-  }
-}
-
-class ListPage extends StatelessWidget {
-  const ListPage({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    UsersController usersController = UsersController();
-    usersController.getUsers();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('list pessoas'),
-      ),
-      body: Observer(
-        builder: (BuildContext context) {
-          print(usersController.users);
-          return ListView.builder(
-              itemCount: usersController.users.length,
-              itemBuilder: (ctx, index) {
-                return ListTile(
-                  title: Text(usersController.users[index].name),
-                );
-              });
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => RegisterAuth()),
-          );
-        },
-      ),
     );
   }
 }

@@ -21,7 +21,8 @@ abstract class UsersControllerBase with Store {
   }
 
   @action
-  registerUser(UserEntity user) {
-    userRepo.insertUser(user);
+  registerUser(UserEntity user, List<TelefoneEntity> phones) {
+    userRepo.insertUserAndPhones(user, phones);
+    // userRepo.insertUser(user);
   }
 }

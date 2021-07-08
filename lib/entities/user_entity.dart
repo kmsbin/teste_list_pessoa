@@ -19,7 +19,10 @@ class UserEntity {
     });
 
     return UserEntity(
-        name: newUser[DatabaseHelper.userName], document: newUser[DatabaseHelper.userDocument], id: newUser[DatabaseHelper.userId], telefones: phones);
+        name: newUser[DatabaseHelper.userName],
+        document: newUser[DatabaseHelper.userDocument],
+        id: newUser[DatabaseHelper.userId],
+        telefones: phones);
   }
   Map<String, dynamic> toMap() {
     return {
@@ -48,7 +51,6 @@ class TelefoneEntity {
 
   @override
   String toString() {
-    // TODO: implement toString
     return "TelefoneEntity( id: $id, number: $number) ";
   }
 }

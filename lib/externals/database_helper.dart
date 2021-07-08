@@ -47,11 +47,6 @@ class DatabaseHelper {
 
   // Código SQL para criar o banco de dados e a tabela
   Future _onCreate(Database db, int version) async {
-    db.delete(tableUser);
-    db.delete(tablePhone);
-    await db.execute("truncate TABLE $tableUser");
-    await db.execute("truncate TABLE $tablePhone");
-
     await db.execute('''
           CREATE TABLE $tableUser (
             $userId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,17 +64,16 @@ class DatabaseHelper {
           ''');
   }
 
-  Future<List<Map<String, dynamic>>> insertUser(Map<String, dynamic> user) async {
+  Future<int?> insertUser(Map<String, dynamic> user) async {
     Database? db = await instance.database;
-    await db?.insert(tableUser, user);
 
-    return db!.rawQuery("SELECT last_insert_rowid() from user");
+    return await db?.insert(tableUser, user);
   }
 
   Future<int?> insertPhone(Map<String, dynamic> phone, int index) async {
     phone[DatabaseHelper.userIdPhone] = index;
     Database? db = await instance.database;
-    print(phone);
+    print("Registered phone $phone");
     return await db?.insert(tablePhone, phone);
   }
 

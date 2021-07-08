@@ -13,11 +13,11 @@ class UsersRepository {
     // dbConn.insertUser(UserEntity(name: "name", document: "document", id: 0).toMap());
     // dbConn.insertUser(UserEntity(name: "name", document: "document", id: 0).toMap());
 
-    var user = UserEntity(name: "name", document: "document", id: 0, telefones: []);
-    this.insertUserAndPhones(user, [
-      TelefoneEntity(number: "3456", id: user.id),
-      TelefoneEntity(number: "34sdfdgh56", id: user.id),
-    ]);
+    // var user = UserEntity(name: "name", document: "document", id: 0, telefones: []);
+    // this.insertUserAndPhones(user, [
+    //   TelefoneEntity(number: "3456", id: user.id),
+    //   TelefoneEntity(number: "34sdfdgh56", id: user.id),
+    // ]);
   }
 
   void deleteUserByIndex(int index) async {
@@ -29,13 +29,10 @@ class UsersRepository {
   }
 
   void insertUserAndPhones(UserEntity newUser, List<TelefoneEntity> phones) async {
-    var users = await dbConn.insertUser(newUser.toMap());
-    var user = users.first;
-    print("index: $user");
-    print(getUsers());
-    await Future.delayed(const Duration(seconds: 2), () => "1");
+    int? userId = await dbConn.insertUser(newUser.toMap());
+    print("Insert phone $phones in $userId ");
     phones.forEach((phone) async {
-      await dbConn.insertPhone(phone.toMap(), user['id']);
+      await dbConn.insertPhone(phone.toMap(), userId!);
     });
   }
 
@@ -46,10 +43,12 @@ class UsersRepository {
   Future<List<UserEntity>> getUsers() async {
     List<Map<String, dynamic>> listUsers = await dbConn.queryAllUsers();
     List<UserEntity> users = [];
-    List<TelefoneEntity> phones = [];
     listUsers.forEach((newUser) async {
       List<Map<String, dynamic>> listPhones = await dbConn.queryAllUserPhones(newUser[DatabaseHelper.userId]);
       users.add(UserEntity.fromMap(newUser, rawPhones: listPhones));
+    });
+    users.forEach((element) {
+      print("Telefones ${element.telefones}");
     });
     return users;
   }
