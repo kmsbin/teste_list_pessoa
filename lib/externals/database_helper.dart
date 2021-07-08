@@ -14,10 +14,10 @@ class DatabaseHelper {
   static final userId = 'id';
   static final userName = 'name';
   static final userDocument = 'document';
-  static final userIdPhone = 'user_id';
+  static final userIdPhone = 'id';
 
   static final tablePhone = 'phone';
-  static final phoneId = 'id';
+  static final phoneId = 'phone_id';
   static final number = 'number';
 
   DatabaseHelper._privateConstructor();
@@ -34,24 +34,24 @@ class DatabaseHelper {
 
   _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    await deleteDatabase(documentsDirectory.path);
+
+    print(documentsDirectory.path);
     String path = join(documentsDirectory.path, _databaseName);
     return await openDatabase(path, version: _databaseVersion, onCreate: _onCreate, onConfigure: _onConfigure);
   }
 
   static Future _onConfigure(Database db) async {
-    // await db.execute('PRAGMA foreign_keys = ON');
+    await db.execute('PRAGMA foreign_keys = ON');
   }
 
   // Código SQL para criar o banco de dados e a tabela
   Future _onCreate(Database db, int version) async {
-    await db.execute('''
-          CREATE TABLE $tablePhone (
-            $phoneId INTEGER NOT NULL,
-            $number TEXT NOT NULL,
-            $userIdPhone INTEGER NOT NULL,
-            FOREIGN KEY ($userIdPhone) REFERENCES user($userId) ON DELETE NO ACTION ON UPDATE NO ACTION
-          )
-          ''');
+    db.delete(tableUser);
+    db.delete(tablePhone);
+    await db.execute("truncate TABLE $tableUser");
+    await db.execute("truncate TABLE $tablePhone");
+
     await db.execute('''
           CREATE TABLE $tableUser (
             $userId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -59,12 +59,28 @@ class DatabaseHelper {
             $userDocument TEXT NOT NULL
           )
           ''');
+    await db.execute('''
+          CREATE TABLE $tablePhone (
+            $phoneId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $number TEXT NOT NULL,
+            $userIdPhone INTEGER,
+            FOREIGN KEY ($userIdPhone) REFERENCES $tableUser($userId)
+          )
+          ''');
   }
 
-  Future<int> insertUser(Map<String, dynamic> user) async {
+  Future<List<Map<String, dynamic>>> insertUser(Map<String, dynamic> user) async {
     Database? db = await instance.database;
+    await db?.insert(tableUser, user);
 
-    return await db!.insert(tableUser, user);
+    return db!.rawQuery("SELECT last_insert_rowid() from user");
+  }
+
+  Future<int?> insertPhone(Map<String, dynamic> phone, int index) async {
+    phone[DatabaseHelper.userIdPhone] = index;
+    Database? db = await instance.database;
+    print(phone);
+    return await db?.insert(tablePhone, phone);
   }
 
   Future<List<Map<String, dynamic>>> queryAllUsers() async {

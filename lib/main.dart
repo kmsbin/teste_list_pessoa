@@ -30,6 +30,7 @@ class ListPage extends StatelessWidget {
       ),
       body: Observer(
         builder: (BuildContext context) {
+          print(usersController.users);
           return ListView.builder(
               itemCount: usersController.users.length,
               itemBuilder: (ctx, index) {

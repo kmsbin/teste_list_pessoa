@@ -1,8 +1,10 @@
+import 'package:list_pessoas/externals/database_helper.dart';
+
 class UserEntity {
   String name;
   String document;
   int id;
-  List<TelefoneEntity> telefones;
+  List<TelefoneEntity> telefones = [];
   UserEntity({
     required this.name,
     required this.document,
@@ -10,22 +12,43 @@ class UserEntity {
     required this.telefones,
   });
 
-  factory UserEntity.fromMap(Map<String, dynamic> newUser) {
+  factory UserEntity.fromMap(Map<String, dynamic> newUser, {List<Map<String, dynamic>> rawPhones = const []}) {
+    List<TelefoneEntity> phones = [];
+    rawPhones.forEach((rawPhone) {
+      phones.add(TelefoneEntity.fromMap(rawPhone));
+    });
+
     return UserEntity(
-        name: newUser['name'] ?? '', document: newUser['document'], telefones: [TelefoneEntity(number: newUser['telefones'].toString())], id: newUser['id']);
+        name: newUser[DatabaseHelper.userName], document: newUser[DatabaseHelper.userDocument], id: newUser[DatabaseHelper.userId], telefones: phones);
   }
   Map<String, dynamic> toMap() {
     return {
       // 'id': id,
-      'name': name,
-      'document': document,
+      DatabaseHelper.userName: name,
+      DatabaseHelper.userDocument: document,
     };
+  }
+
+  @override
+  String toString() {
+    return "UserEntity (id: $id, name: $name, document: $document, phones: $telefones)";
   }
 }
 
 class TelefoneEntity {
+  int id;
   String number;
-  TelefoneEntity({
-    required this.number,
-  });
+  TelefoneEntity({required this.number, required this.id});
+  factory TelefoneEntity.fromMap(Map<String, dynamic> phones) {
+    return TelefoneEntity(id: phones[DatabaseHelper.phoneId], number: phones[DatabaseHelper.number]);
+  }
+  Map<String, dynamic> toMap() {
+    return {DatabaseHelper.userIdPhone: id, DatabaseHelper.number: number};
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "TelefoneEntity( id: $id, number: $number) ";
+  }
 }

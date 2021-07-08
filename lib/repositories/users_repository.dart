@@ -10,10 +10,14 @@ class UsersRepository {
   });
 
   void seed() {
-    dbConn.insertUser(UserEntity(name: "name", document: "document", id: 0, telefones: [TelefoneEntity(number: '3456')]).toMap());
-    dbConn.insertUser(UserEntity(name: "name", document: "document", id: 0, telefones: [TelefoneEntity(number: '3456')]).toMap());
-    dbConn.insertUser(UserEntity(name: "name", document: "document", id: 0, telefones: [TelefoneEntity(number: '3456')]).toMap());
-    dbConn.insertUser(UserEntity(name: "name", document: "document", id: 0, telefones: [TelefoneEntity(number: '3456')]).toMap());
+    // dbConn.insertUser(UserEntity(name: "name", document: "document", id: 0).toMap());
+    // dbConn.insertUser(UserEntity(name: "name", document: "document", id: 0).toMap());
+
+    var user = UserEntity(name: "name", document: "document", id: 0, telefones: []);
+    this.insertUserAndPhones(user, [
+      TelefoneEntity(number: "3456", id: user.id),
+      TelefoneEntity(number: "34sdfdgh56", id: user.id),
+    ]);
   }
 
   void deleteUserByIndex(int index) async {
@@ -21,7 +25,18 @@ class UsersRepository {
   }
 
   void insertUser(UserEntity user) {
-    users.add(user);
+    dbConn.insertUser(user.toMap());
+  }
+
+  void insertUserAndPhones(UserEntity newUser, List<TelefoneEntity> phones) async {
+    var users = await dbConn.insertUser(newUser.toMap());
+    var user = users.first;
+    print("index: $user");
+    print(getUsers());
+    await Future.delayed(const Duration(seconds: 2), () => "1");
+    phones.forEach((phone) async {
+      await dbConn.insertPhone(phone.toMap(), user['id']);
+    });
   }
 
   void updateUserByIndex({required UserEntity user}) {
@@ -31,8 +46,10 @@ class UsersRepository {
   Future<List<UserEntity>> getUsers() async {
     List<Map<String, dynamic>> listUsers = await dbConn.queryAllUsers();
     List<UserEntity> users = [];
-    listUsers.forEach((newUser) {
-      users.add(UserEntity.fromMap(newUser));
+    List<TelefoneEntity> phones = [];
+    listUsers.forEach((newUser) async {
+      List<Map<String, dynamic>> listPhones = await dbConn.queryAllUserPhones(newUser[DatabaseHelper.userId]);
+      users.add(UserEntity.fromMap(newUser, rawPhones: listPhones));
     });
     return users;
   }

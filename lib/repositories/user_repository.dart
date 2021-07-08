@@ -8,7 +8,5 @@ class UserRepository {
 
   UserEntity get getUser => user;
 
-  void updateUser({required String name, required String document, required List<TelefoneEntity> telefones}) {
-    // user = UserEntity(name: name, document: document, telefones: telefones);
-  }
+  void updateUser(UserEntity user) {}
 }
