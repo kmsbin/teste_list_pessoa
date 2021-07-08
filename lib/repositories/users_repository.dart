@@ -21,8 +21,8 @@ class UsersRepository {
   }
 
   Future<void> deleteUserByIndex(int index) async {
-    await dbConn.deletePhone(index);
     await dbConn.deleteUser(index);
+    await dbConn.deletePhone(index);
   }
 
   void insertUser(UserEntity user) {
@@ -32,9 +32,8 @@ class UsersRepository {
   Future<void> insertUserAndPhones(UserEntity newUser, List<TelefoneEntity> phones) async {
     int? userId = await dbConn.insertUser(newUser.toMap());
     print("Insert phone $phones in $userId ");
-    phones.asMap().forEach((index, phone) async {
-      int index = (await dbConn.insertPhone(phone.toMap(), userId!))!;
-      phones[index].id = index;
+    phones.forEach((phone) async {
+      await dbConn.insertPhone(phone.toMap(), userId!);
     });
   }
 

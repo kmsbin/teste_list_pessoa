@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:list_pessoas/controllers/users_controller.dart';
 import 'package:list_pessoas/entities/user_entity.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class RegisterAuth extends StatefulWidget {
   final UsersController usersController;
@@ -107,7 +108,10 @@ class RegisterUserData {
   TextEditingController controller;
   late Widget registerField;
   RegisterUserData(this.controller) {
+    var maskFormatter = new MaskTextInputFormatter(mask: ' (##) #####-####', filter: {"#": RegExp(r'[0-9]')});
+
     registerField = TextFormField(
+      inputFormatters: [maskFormatter],
       controller: this.controller,
       decoration: InputDecoration(hintText: "Telefone"),
     );

@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:list_pessoas/controllers/users_controller.dart';
 import 'package:list_pessoas/ui/register_user.dart';
-import 'package:list_pessoas/ui/show_user_infos.dart';
+import 'package:list_pessoas/ui/update_user.dart';
 
 class ListPage extends StatelessWidget {
   const ListPage({Key? key}) : super(key: key);
@@ -28,7 +28,7 @@ class ListPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ShowUserInfo(usersController.users[index], usersController)),
+                          builder: (context) => UpdateUserPage(usersController.users[index], usersController)),
                     );
                   },
                   trailing: Row(

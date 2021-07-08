@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:list_pessoas/entities/user_entity.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -31,6 +30,8 @@ class DatabaseHelper {
     _database = await _initDatabase();
     return _database;
   }
+
+  List<Object?>? get arguments => null;
 
   _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -100,7 +101,9 @@ class DatabaseHelper {
 
   Future<int?> updatePhone(Map<String, dynamic> row, num id) async {
     Database? db = await instance.database;
-    return await db!.update(tableUser, row, where: '$phoneId = ?', whereArgs: [id]);
+
+    return await db!
+        .rawUpdate("UPDATE $tablePhone SET number = ? WHERE phone_id = ? ", [row[number], row[userIdPhone]]);
   }
 
   Future<int?> deleteUser(int id) async {
