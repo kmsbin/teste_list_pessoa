@@ -17,7 +17,10 @@ class MyApp extends StatelessWidget {
       title: 'list pessoas',
       theme: ThemeData(
         brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+                textStyle: MaterialStateProperty.all(TextStyle(color: Colors.black87)), backgroundColor: MaterialStateProperty.all(Color(0xff64ffda)))),
+        buttonTheme: ButtonThemeData(buttonColor: Color(0xff64ffda), textTheme: ButtonTextTheme.primary),
         inputDecorationTheme: InputDecorationTheme(
           labelStyle: TextStyle(color: Colors.white54),
           border: OutlineInputBorder(

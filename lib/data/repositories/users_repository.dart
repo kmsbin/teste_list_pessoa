@@ -1,4 +1,5 @@
-import 'package:list_pessoas/entities/user_entity.dart';
+import 'package:list_pessoas/data/entities/telefone_entity.dart';
+import 'package:list_pessoas/data/entities/user_entity.dart';
 import 'package:list_pessoas/externals/database_helper.dart';
 
 class UsersRepository {
@@ -21,8 +22,8 @@ class UsersRepository {
   }
 
   Future<void> deleteUserByIndex(int index) async {
-    await dbConn.deleteUser(index);
     await dbConn.deletePhone(index);
+    await dbConn.deleteUser(index);
   }
 
   void insertUser(UserEntity user) {
@@ -35,6 +36,10 @@ class UsersRepository {
     phones.forEach((phone) async {
       await dbConn.insertPhone(phone.toMap(), userId!);
     });
+  }
+
+  Future<void> insertPhone(TelefoneEntity phone, int userId) async {
+    await dbConn.insertPhone(phone.toMap(), userId);
   }
 
   Future<void> updateUserByIndex({

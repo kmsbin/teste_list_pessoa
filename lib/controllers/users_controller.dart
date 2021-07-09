@@ -1,5 +1,6 @@
-import 'package:list_pessoas/entities/user_entity.dart';
-import 'package:list_pessoas/repositories/users_repository.dart';
+import 'package:list_pessoas/data/entities/telefone_entity.dart';
+import 'package:list_pessoas/data/entities/user_entity.dart';
+import 'package:list_pessoas/data/repositories/users_repository.dart';
 import 'package:mobx/mobx.dart';
 
 part 'users_controller.g.dart';
@@ -23,6 +24,11 @@ abstract class UsersControllerBase with Store {
   @action
   registerUser(UserEntity user, List<TelefoneEntity> phones) async {
     await userRepo.insertUserAndPhones(user, phones);
+  }
+
+  @action
+  registerPhone(TelefoneEntity phone, int userId) async {
+    await userRepo.insertPhone(phone, userId);
   }
 
   @action

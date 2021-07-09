@@ -1,3 +1,4 @@
+import 'package:list_pessoas/data/entities/telefone_entity.dart';
 import 'package:list_pessoas/externals/database_helper.dart';
 
 class UserEntity {
@@ -19,10 +20,7 @@ class UserEntity {
     });
 
     return UserEntity(
-        name: newUser[DatabaseHelper.userName],
-        document: newUser[DatabaseHelper.userDocument],
-        id: newUser[DatabaseHelper.userId],
-        telefones: phones);
+        name: newUser[DatabaseHelper.userName], document: newUser[DatabaseHelper.userDocument], id: newUser[DatabaseHelper.userId], telefones: phones);
   }
   Map<String, dynamic> toMap() {
     return {
@@ -35,26 +33,5 @@ class UserEntity {
   @override
   String toString() {
     return "UserEntity (id: $id, name: $name, document: $document, phones: $telefones)";
-  }
-}
-
-class TelefoneEntity {
-  int userId;
-  int id;
-  String number;
-  TelefoneEntity({required this.number, required this.id, required this.userId});
-  factory TelefoneEntity.fromMap(Map<String, dynamic> phones) {
-    return TelefoneEntity(
-        id: phones[DatabaseHelper.phoneId],
-        number: phones[DatabaseHelper.number],
-        userId: phones[DatabaseHelper.userIdPhone]);
-  }
-  Map<String, dynamic> toMap() {
-    return {DatabaseHelper.userIdPhone: id, DatabaseHelper.number: number, DatabaseHelper.userIdPhone: userId};
-  }
-
-  @override
-  String toString() {
-    return "TelefoneEntity( id: $id, number: $number) ";
   }
 }

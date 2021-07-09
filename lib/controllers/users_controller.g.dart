@@ -40,6 +40,15 @@ mixin _$UsersController on UsersControllerBase, Store {
         .run(() => super.registerUser(user, phones));
   }
 
+  final _$registerPhoneAsyncAction =
+      AsyncAction('UsersControllerBase.registerPhone');
+
+  @override
+  Future registerPhone(TelefoneEntity phone, int userId) {
+    return _$registerPhoneAsyncAction
+        .run(() => super.registerPhone(phone, userId));
+  }
+
   final _$updateUserAsyncAction = AsyncAction('UsersControllerBase.updateUser');
 
   @override

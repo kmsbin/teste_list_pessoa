@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
-  static final _databaseName = "teste_list_pessoas.db";
+  static final _databaseName = "list_pessoas.db";
   static final _databaseVersion = 1;
 
   static final tableUser = 'user';
@@ -102,17 +102,18 @@ class DatabaseHelper {
   Future<int?> updatePhone(Map<String, dynamic> row, num id) async {
     Database? db = await instance.database;
 
-    return await db!
-        .rawUpdate("UPDATE $tablePhone SET number = ? WHERE phone_id = ? ", [row[number], row[userIdPhone]]);
+    return await db!.rawUpdate("UPDATE $tablePhone SET number = ? WHERE phone_id = ? ", [row[number], row[userIdPhone]]);
   }
 
   Future<int?> deleteUser(int id) async {
     Database? db = await instance.database;
-    return await db!.delete(tableUser, where: '$userId = ?', whereArgs: [id]);
+    print('Delete id $id');
+    return await db!.rawDelete("DELETE FROM $tableUser WHERE $userId = ?", [id]);
   }
 
   Future<int?> deletePhone(int id) async {
     Database? db = await instance.database;
-    return await db!.delete(tablePhone, where: '$userIdPhone = ?', whereArgs: [id]);
+    print('Delete id $id');
+    return await db!.rawDelete("DELETE FROM $tablePhone WHERE $userIdPhone = ?", [id]);
   }
 }

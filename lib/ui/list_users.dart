@@ -11,9 +11,31 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     UsersController usersController = UsersController();
     usersController.getUsers();
+    print("Color: ${Theme.of(context).accentColor}");
     return Scaffold(
       appBar: AppBar(
-        title: Text('list pessoas'),
+        title: Text('Gestão de pessoas'),
+        actions: [
+          GestureDetector(
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('Atualização do usuário'),
+                        actions: [
+                          ElevatedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("ok", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)))
+                        ],
+                        content: Text("Para atualizar ou ver os dados do usuário clique sobre o card"),
+                      );
+                    });
+              },
+              child: Container(margin: EdgeInsets.symmetric(horizontal: 10), child: Icon(Icons.info)))
+        ],
       ),
       body: Observer(
         builder: (BuildContext context) {
@@ -21,42 +43,51 @@ class ListPage extends StatelessWidget {
           return ListView.builder(
               itemCount: usersController.users.length,
               itemBuilder: (ctx, index) {
-                return ListTile(
-                  title: Text(usersController.users[index].name),
-                  subtitle: Text("Document: ${usersController.users[index].document}"),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => UpdateUserPage(usersController.users[index], usersController)),
-                    );
-                  },
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          usersController.deleteUserAndPhone(index);
-                        },
-                        child: Icon(
-                          Icons.update,
-                          color: Color(0xfffcba03),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          usersController.deleteUserAndPhone(index);
-                        },
-                        child: Icon(Icons.delete, color: Color(0xffed0909)),
-                      )
-                    ],
+                return Card(
+                  child: ListTile(
+                    title: Text(usersController.users[index].name),
+                    subtitle: Text("Document: ${usersController.users[index].document}"),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => UpdateUserPage(index, usersController)),
+                      );
+                    },
+                    trailing: GestureDetector(
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Tem certeza que quer deletar o usuário?'),
+                                actions: [
+                                  ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text("não", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold))),
+                                  ElevatedButton(
+                                      onPressed: () async {
+                                        await usersController.deleteUserAndPhone(usersController.users[index].id);
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: Text("sim", style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)))
+                                ],
+                              );
+                            });
+                      },
+                      child: Icon(Icons.delete, color: Color(0xffed0909)),
+                    ),
                   ),
                 );
               });
         },
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: GestureDetector(
+          onTap: () {},
+          child: Icon(Icons.add),
+        ),
         onPressed: () {
           Navigator.push(
             context,
